@@ -1,0 +1,17 @@
+{
+  "admin-authorization.navigation.label-group": "Autorizações",
+  "admin-authorization.navigation.label-details": "Exemplo de detalhes",
+  "admin-authorization.navigation.label-table": "Exemplo de tabela",
+  "admin-authorization.navigation.search.kws": "teste, mock, fake",
+  "admin-authorization.navigation.details.search.kws": "detalhe, mock, test, oi",
+  "admin-authorization.navigation.table.search.kws": "tabela, mock, test, tchau",
+  "admin-authorization.hello-world": "Admin de exemplo",
+  "admin-authorization.navigation.label-permissions": "All Permissions",
+  "admin-authorization.navigation.label-roles": "All Roles",
+  "admin-authorization.navigation.roles.search.kws": "roles, vtex",
+  "admin-authorization.navigation.label-user-roles": "User roles",
+  "admin-authorization.navigation.user-roles.search.kws": "user role, vtex",
+  "admin-authorization.permissions.title": "Permissions",
+  "admin-authorization.roles.title": "Roles",
+  "admin-authorization.user-roles.title": "User roles"
+}

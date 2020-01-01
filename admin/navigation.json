@@ -1,0 +1,28 @@
+{
+  "section": "accountSettings",
+  "titleId": "admin-authorization.navigation.label-group",
+  "subSection": "authorization",
+  "searchKeyWordsHelpers": "admin-authorization.navigation.search.kws",
+  "subSectionItems": [
+    {
+      "labelId": "admin-authorization.navigation.label-permissions",
+      "path": "/admin/authorization/permissions",
+      "searchKeyWordsHelpers": "admin-authorization.navigation.permissions.search.kws"
+    },
+    {
+      "labelId": "admin-authorization.navigation.label-roles",
+      "path": "/admin/authorization/roles",
+      "searchKeyWordsHelpers": "admin-authorization.navigation.roles.search.kws"
+    },
+    {
+      "labelId": "admin-authorization.navigation.label-user-roles",
+      "path": "/admin/authorization/user-roles",
+      "searchKeyWordsHelpers": "admin-authorization.navigation.user-roles.search.kws"
+    },
+    {
+      "labelId": "admin-authorization.navigation.label-table",
+      "path": "/admin/authorization",
+      "searchKeyWordsHelpers": "admin-authorization.navigation.table.search.kws"
+    }
+  ]
+}
