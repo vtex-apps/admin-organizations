@@ -38,16 +38,6 @@ class PermissionsList extends Component {
     }
     return {
       properties: {
-        id: {
-          title: 'Id',
-          cellRenderer: ({ cellData }: any) => {
-            return (
-              <span className={`ws-normal ${fontSize}`}>
-                {cellData}
-              </span>
-            )
-          }
-        },
         name: {
           title: 'Name',
           cellRenderer: ({ cellData }: any) => {
@@ -80,19 +70,22 @@ class PermissionsList extends Component {
       this.setState({selectedPermission : {}}) 
     }
 
-    const editPermission = () => {
-
+    const editPermission = (cellData: Permission) => {
+      this.setState({selectedPermission : cellData}) 
+      this.setState({openPermissionModal: true})
     }
 
     const closeModal = () => {
       this.setState({openPermissionModal: false})
       this.setState({selectedPermission : {}}) 
     }
-  
+    const componentDidUpdate = () => {
+      debugger
+        }
     const lineActions = [
       {
         label: () => `Edit`,
-        onClick: ({ rowData }: any) => alert(`Executed action for ${rowData.name}`),
+        onClick: ({ rowData }: any) => editPermission(rowData),
       },
       {
         label: () => `Delete`,
@@ -129,11 +122,6 @@ class PermissionsList extends Component {
             newLine: {
               label: 'New',
               handleCallback: () => createNewPermission(),
-            },
-            fields: {
-              label: 'Toggle visible fields',
-              showAllLabel: 'Show All',
-              hideAllLabel: 'Hide All',
             }
           }}
         />

@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import { Modal, Button, Input } from "vtex.styleguide"
 import { Permission } from "../../utils/dataTypes"
 import { useMutation } from "react-apollo"
@@ -16,15 +16,21 @@ interface Props {
 
 const PermissionModal = (props: Props) => {
   
-  const [id, setId] = props.permission && props.permission.id? useState(props.permission.id): useState(null)
+  const [id, setId] = props.permission && props.permission.id? useState(props.permission.id): useState('')
   const [name, setName] = props.permission && props.permission.name? useState(props.permission.name): useState('')
   const [label, setLabel] = props.permission && props.permission.label? useState(props.permission.label): useState('')
   
-  const [addPermission, { data }] = useMutation(CREATE_DOCUMENT)
+  const [addPermission] = useMutation(CREATE_DOCUMENT)
 
   const handleCloseModal = () => {
     props.closeModal(false)
   }
+
+  useEffect(() => {
+    setId(props.permission && props.permission.id? props.permission.id: '')
+    setName(props.permission && props.permission.name? props.permission.name: '')
+    setLabel(props.permission && props.permission.label? props.permission.label: '')
+  }, [props.permission])
 
   const handleSave = () => {
     //props.closeModal(false)
@@ -37,8 +43,6 @@ const PermissionModal = (props: Props) => {
       variables: { acronym: PERMISSIONS_ACRONYM, document: { fields: permissionFields }, schema: PERMISSIONS_SCHEMA },
     }
     const result = await addPermission(params)
-    console.log(data)
-    console.log(result)
     props.closeModal(false)
   }
 
