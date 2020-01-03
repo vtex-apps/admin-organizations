@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { FormattedMessage } from "react-intl"
 import { Layout, PageBlock, PageHeader, Spinner } from "vtex.styleguide"
 import RolesList from "./RolesList"
@@ -30,7 +30,6 @@ const Roles = () => {
   })
   const documents = !loading && !error ? path(["documents"], data) : null
   const permissions : Permission[] = documents ? documentSerializer(documents) : []
-  debugger
   return (
     !loading && (
       <Layout

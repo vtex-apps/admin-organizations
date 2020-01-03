@@ -1,15 +1,20 @@
 import React, { Component } from "react"
 import { Table, Input } from "vtex.styleguide"
 import { find, propEq } from "ramda"
-import { Permission } from "../../utils/dataTypes"
-
+import { Role, Permission } from "../../utils/dataTypes"
+import RoleModal from './RoleModal'
+import RoleDelete from './RoleDelete'
+import '../../styles.global.css'
 class RolesList extends Component {
   constructor(props: any) {
     super(props)
     this.state = {
       items: props.itemsList,
       tableDensity: "low",
-      searchValue: null
+      searchValue: null,
+      selectedRole: {},
+      openRoleModal: false,
+      openRoleDelete: false
     }
   }
 
@@ -59,8 +64,6 @@ class RolesList extends Component {
         permissions: {
           title: "Permissions",
           cellRenderer: ({ cellData }: any) => {
-            console.log(cellData)
-            debugger
             return cellData ? (
               <div className={`ws-normal ${fontSize}`}>
                 {(JSON.parse(cellData) as any[]).map(x => (
@@ -81,19 +84,43 @@ class RolesList extends Component {
   }
 
   public render() {
-    const { items, searchValue, tableDensity }: any = this.state
+    const { items, searchValue, tableDensity, selectedRole, openRoleModal, openRoleDelete }: any = this.state
+    const { permissionList }: any = this.props
+
+    const createNewRole = () => {
+      this.setState({selectedRole : {}}) 
+      this.setState({openRoleModal: true})
+    }
+
+    const editRole = (cellData: Role) => {
+      this.setState({selectedRole : cellData}) 
+      this.setState({openRoleModal: true})
+    }
+
+    const deleteRole = (cellData: Role) => {
+      this.setState({selectedRole : cellData}) 
+      this.setState({openRoleDelete: true})
+    }
+
+    const closeModal = () => {
+      this.setState({selectedRole : {}}) 
+      this.setState({openRoleModal: false})
+    }
+
+    const closeDeleteModal = () => {
+      this.setState({selectedRole : {}}) 
+      this.setState({openRoleDelete: false})
+    }
 
     const lineActions = [
       {
         label: () => `Edit`,
-        onClick: ({ rowData }: any) =>
-          alert(`Executed action for ${rowData.name}`)
+        onClick: ({ rowData }: any) => editRole(rowData)
       },
       {
         label: () => `Delete`,
         isDangerous: true,
-        onClick: ({ rowData }: any) =>
-          alert(`Executed a DANGEROUS action for ${rowData.name}`)
+        onClick: ({ rowData }: any) => deleteRole(rowData)
       }
     ]
 
@@ -117,17 +144,19 @@ class RolesList extends Component {
             },
             inputSearch: {
               value: searchValue,
-              placeholder: "Search permission...",
+              placeholder: "Search role...",
               onChange: (searchValue: string) => this.setState({ searchValue }),
               onClear: () => this.setState({ searchValue: null }),
               onSubmit: () => {}
             },
             newLine: {
               label: "New",
-              handleCallback: () => alert("handle new line callback")
+              handleCallback: () => createNewRole()
             }
           }}
         />
+        <RoleModal {...{role: selectedRole, isModalOpen: openRoleModal, closeModal: closeModal, allPermissions: permissionList }}/>
+        <RoleDelete {...{role: selectedRole, isModalOpen: openRoleDelete, closeModal: closeDeleteModal }}/>
       </div>
     )
   }

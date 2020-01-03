@@ -1,0 +1,6 @@
+mutation updateDocument($acronym: String!, $document: DocumentInput, $schema: String) {
+  updateDocument(acronym: $acronym, document: $document, schema: $schema) {
+    id
+    cacheId
+  }
+}

@@ -6,13 +6,5 @@
   "admin.app.authorization-roles": {
     "component": "Roles",
     "path": "/admin/app/authorization/roles"
-  },
-  "admin.app.authorization-user-roles": {
-    "component": "UserRoles",
-    "path": "/admin/app/authorization/user-roles"
-  },
-  "admin.app.example-detail": {
-    "component": "AdminExampleDetail",
-    "path": "/admin/app/authorization/:id"
   }
 }

@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react"
 import { Modal, Button, Input } from "vtex.styleguide"
 import { Permission } from "../../utils/dataTypes"
 import { useMutation } from "react-apollo"
-import CREATE_DOCUMENT from '../../graphql/mutations/createDocument.graphql'
-import {
-  PERMISSIONS_ACRONYM,
-  PERMISSIONS_SCHEMA
-} from "../../utils/consts"
+import CREATE_DOCUMENT from "../../graphql/mutations/createDocument.graphql"
+import UPDATE_DOCUMENT from "../../graphql/mutations/updateDocument.graphql"
+import { PERMISSIONS_ACRONYM, PERMISSIONS_SCHEMA } from "../../utils/consts"
 
 interface Props {
   isModalOpen: boolean
@@ -15,35 +13,48 @@ interface Props {
 }
 
 const PermissionModal = (props: Props) => {
-  
-  const [id, setId] = props.permission && props.permission.id? useState(props.permission.id): useState('')
-  const [name, setName] = props.permission && props.permission.name? useState(props.permission.name): useState('')
-  const [label, setLabel] = props.permission && props.permission.label? useState(props.permission.label): useState('')
-  
+  const [isEdit, setIsEdit] = useState(false)
+  const [id, setId] = useState("")
+  const [name, setName] = useState("")
+  const [label, setLabel] = useState("")
+
   const [addPermission] = useMutation(CREATE_DOCUMENT)
+  const [editPermission] = useMutation(UPDATE_DOCUMENT)
 
   const handleCloseModal = () => {
-    props.closeModal(false)
+    props.closeModal()
   }
 
   useEffect(() => {
-    setId(props.permission && props.permission.id? props.permission.id: '')
-    setName(props.permission && props.permission.name? props.permission.name: '')
-    setLabel(props.permission && props.permission.label? props.permission.label: '')
+    setIsEdit(
+      props.permission &&
+        props.permission.id !== undefined &&
+        props.permission.id !== ""
+    )
+    setId(props.permission && props.permission.id ? props.permission.id : "")
+    setName(props.permission && props.permission.name ? props.permission.name : "")
+    setLabel(props.permission && props.permission.label ? props.permission.label : "")
   }, [props.permission])
 
-  const handleSave = () => {
-    //props.closeModal(false)
-    createPermission()
-  }
-
-  const createPermission = async() => {
-    const permissionFields = [ { key: 'name', value: name }, {key: 'label', value: label}]
-    const params = {
-      variables: { acronym: PERMISSIONS_ACRONYM, document: { fields: permissionFields }, schema: PERMISSIONS_SCHEMA },
+  const handleSave = async () => {
+    const permissionFields = [
+      { key: "name", value: name },
+      { key: "label", value: label }
+    ]
+    if (isEdit) {
+      permissionFields.push({ key: "id", value: id })
     }
-    const result = await addPermission(params)
-    props.closeModal(false)
+    const save = isEdit? editPermission: addPermission
+    
+    await save({
+      variables: {
+        acronym: PERMISSIONS_ACRONYM,
+        document: { fields: permissionFields },
+        schema: PERMISSIONS_SCHEMA
+      }
+    })
+
+    props.closeModal()
   }
 
   return (

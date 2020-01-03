@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Table, Input } from "vtex.styleguide"
 import PermissionModal from './PermissionModal'
 import { Permission } from '../../utils/dataTypes'
+import PermissionDelete from './PermissionDelete'
 
 class PermissionsList extends Component {
   constructor(props: any) {
@@ -10,8 +11,9 @@ class PermissionsList extends Component {
       items: props.itemsList,
       tableDensity: 'low',
       searchValue: null,
-      selectedPermission: null,
-      openPermissionModal: false
+      selectedPermission: {},
+      openPermissionModal: false,
+      openPermissionDelete: false
     }
   }
   
@@ -63,11 +65,11 @@ class PermissionsList extends Component {
   }
 
   public render() {
-    const { items, searchValue, tableDensity, selectedPermission, openPermissionModal }: any = this.state
+    const { items, searchValue, tableDensity, selectedPermission, openPermissionModal, openPermissionDelete }: any = this.state
 
     const createNewPermission = () => {
-      this.setState({openPermissionModal: true})
       this.setState({selectedPermission : {}}) 
+      this.setState({openPermissionModal: true})
     }
 
     const editPermission = (cellData: Permission) => {
@@ -75,13 +77,21 @@ class PermissionsList extends Component {
       this.setState({openPermissionModal: true})
     }
 
-    const closeModal = () => {
-      this.setState({openPermissionModal: false})
-      this.setState({selectedPermission : {}}) 
+    const deletePermission = (cellData: Permission) => {
+      this.setState({selectedPermission : cellData}) 
+      this.setState({openPermissionDelete: true})
     }
-    const componentDidUpdate = () => {
-      debugger
-        }
+
+    const closeModal = () => {
+      this.setState({selectedPermission : {}}) 
+      this.setState({openPermissionModal: false})
+    }
+
+    const closeDeleteModal = () => {
+      this.setState({selectedPermission : {}}) 
+      this.setState({openPermissionDelete: false})
+    }
+
     const lineActions = [
       {
         label: () => `Edit`,
@@ -90,8 +100,7 @@ class PermissionsList extends Component {
       {
         label: () => `Delete`,
         isDangerous: true,
-        onClick: ({ rowData }: any) =>
-          alert(`Executed a DANGEROUS action for ${rowData.name}`),
+        onClick: ({ rowData }: any) => deletePermission(rowData),
       },
     ]
 
@@ -126,6 +135,7 @@ class PermissionsList extends Component {
           }}
         />
         <PermissionModal {...{permission: selectedPermission, isModalOpen: openPermissionModal, closeModal: closeModal }}/>
+        <PermissionDelete {...{permission: selectedPermission, isModalOpen: openPermissionDelete, closeModal: closeDeleteModal }}/>
       </div>
     )
   }

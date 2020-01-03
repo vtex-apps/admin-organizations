@@ -13,16 +13,6 @@
       "labelId": "admin-authorization.navigation.label-roles",
       "path": "/admin/authorization/roles",
       "searchKeyWordsHelpers": "admin-authorization.navigation.roles.search.kws"
-    },
-    {
-      "labelId": "admin-authorization.navigation.label-user-roles",
-      "path": "/admin/authorization/user-roles",
-      "searchKeyWordsHelpers": "admin-authorization.navigation.user-roles.search.kws"
-    },
-    {
-      "labelId": "admin-authorization.navigation.label-table",
-      "path": "/admin/authorization",
-      "searchKeyWordsHelpers": "admin-authorization.navigation.table.search.kws"
     }
   ]
 }
