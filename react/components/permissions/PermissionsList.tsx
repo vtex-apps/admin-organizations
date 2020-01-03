@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Table, Input } from "vtex.styleguide"
+import { Table } from "vtex.styleguide"
 import PermissionModal from './PermissionModal'
 import { Permission } from '../../utils/dataTypes'
 import PermissionDelete from './PermissionDelete'

@@ -1,4 +1,4 @@
-import React, { Component } from "react"
+import React from "react"
 import { FormattedMessage } from "react-intl"
 import { Layout, PageBlock, PageHeader, Spinner } from "vtex.styleguide"
 import PermissionsList from "./PermissionsList"

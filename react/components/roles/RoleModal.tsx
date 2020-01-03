@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react"
-import { contains, reject, equals, filter, find, propEq } from 'ramda'
+import { contains, reject, equals, find, propEq } from 'ramda'
 import { Modal, Button, Input, ActionMenu, Table } from "vtex.styleguide"
 import { Role, Permission } from "../../utils/dataTypes"
 import { useMutation } from "react-apollo"
@@ -30,20 +30,20 @@ const RoleModal = (props: Props) => {
   }
 
   useEffect(() => {
-    setIsEdit(
-      props.role && props.role.id !== undefined && props.role.id !== ""
-    )
+    setIsEdit(props.role && props.role.id !== undefined && props.role.id !== "")
     setId(props.role && props.role.id ? props.role.id : "")
     setName(props.role && props.role.name ? props.role.name : "")
     setLabel(props.role && props.role.label ? props.role.label : "")
-    setSelectedPermissions(props.role && props.role.permissions? getSelectedPermissions(props.role.permissions): [] as Permission[])
+    setSelectedPermissions(
+      props.role && props.role.permissions
+        ? getSelectedPermissions(props.role.permissions): [] as Permission[]
+      )
   }, [props.role])
 
   const getSelectedPermissions = (ids: any) => {
-    if(!ids || ids.length == 0) return [] as Permission[]
+    if(!ids || ids.length == 0) { return [] as Permission[] }
     const { allPermissions } = props
-    const permissions = (JSON.parse(ids) as string[]).map(x => find(propEq('id', x))(allPermissions)) as Permission[]
-    return permissions
+    return (JSON.parse(ids) as string[]).map(x => find(propEq('id', x))(allPermissions)) as Permission[]
   }
 
   const options = props.allPermissions.map(p => ({
@@ -61,14 +61,15 @@ const RoleModal = (props: Props) => {
     const roleFields = [
       { key: "name", value: name },
       { key: "label", value: label }
-    ] as any[]
+    ]
+    
     if (isEdit) {
       roleFields.push({ key: "id", value: id })
     }
 
     if(selectedPermissions && selectedPermissions.length > 0){
       const permissions = selectedPermissions.map(x => x.id)
-      roleFields.push({ key: "permissions", value: permissions })
+      roleFields.push({ key: "permissions", value: JSON.stringify(permissions) })
     }
 
     const save = isEdit ? editRole : addRole
