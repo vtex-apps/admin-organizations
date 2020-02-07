@@ -1,28 +1,128 @@
-# [ WORK IN PROGRESS ] Admin Example
+# Admin Authorization
 
-An example admin app that adds a menu button to the admin sidebar.
+This is a admin application for managing `Roles` and `Permissions` in the system.
 
-# PREVIEW NOTICE :construction:
+## Usage
 
-We're working on the **admin builder**, which will allow you to define two files: `admin/routes.json` file with everything you need to create an admin interface (routes paths and components), and `admin/navigation.json` which alows your admin app to insert itself in the sidebar navigation. This is a temporary example!
+Install latest version of this app, then you can see the features in admin view. 
 
-### How to develop admins
+```js
+vtex install vtex.admin-authorization
+```
 
-1. Admins always declare routes in `/admin/app/<route>`
+### Master data entities
+In order to run this application, we should create below master data entities. 
 
-2. Declare the `admin` builder in your manifest
+<details><summary>Permissions</summary>
 
-3. When installed, the user navigates to `/admin/<route>`, but your app runs in an iframe that points to `/admin/app/<route>`.
+``` 
 
-4. You can develop directly in the `/admin/app` route for convenience, but don't forget to test it inside the iframe. :)
+Data Entity Name: BusinessPermission
+Schema Name: business-permission-schema-v1
 
+{
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string"
+		}
+	},
+	"v-default-fields": [
+		"name",
+		"label",
+		"id"
+	],
+	"required": [
+		"name"
+	],
+	"v-indexed": [
+		"name"
+	],
+	"v-security": {
+		"allowGetAll": true,
+		"publicRead": [
+			"name",
+			"label",
+			"id"
+		],
+		"publicWrite": [
+			"name",
+			"label"
+		],
+		"publicFilter": [
+			"name",
+			"id"
+		]
+	}
+}
 
-### Quickstart
+```
+</details>
 
-1. Clone this repo
+<details><summary>Roles</summary>
 
-2. `yarn --cwd react/` for code completion
+``` 
 
-3. `vtex link`
+Data Entity Name: BusinessRole
+Schema Name: business-role-schema-v1
 
-4. Navigate to `workspace--account.myvtex.com/admin/app/example`
+{
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string"
+		},
+		"permissions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/permission"
+			}
+		}
+	},
+	"definitions": {
+		"permission": {
+			"type": "string"
+		}
+	},
+	"v-default-fields": [
+		"name",
+		"label",
+		"id",
+		"permissions"
+	],
+	"required": [
+		"name"
+	],
+	"v-indexed": [
+		"name"
+	],
+	"v-security": {
+		"allowGetAll": true,
+		"publicRead": [
+			"name",
+			"label",
+			"permissions",
+			"id"
+		],
+		"publicWrite": [
+			"name",
+			"label",
+			"permissions"
+		],
+		"publicFilter": [
+			"name",
+			"id"
+		]
+	}
+}
+
+```
+</details>
+
+### Add Required roles
+You will need `manager` role to be created for fully functioning other related applications
+Use `label` as `Manager` and `name` as `manager` to create `Manager` role
