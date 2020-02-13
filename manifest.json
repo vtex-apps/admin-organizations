@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vtex.styleguide": "9.x",
-    "biscoindqa.my-organization": "0.x"
+    "biscoindqa.document-graphql": "0.x"
   },
   "builders": {
     "react": "3.x",
