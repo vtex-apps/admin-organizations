@@ -40,7 +40,7 @@ const Permissions = () => {
           if (error) {
             return <div>Failed to load permissions</div>
           }
-          const documents = path(["documents"], data)
+          const documents = path(["myDocuments"], data)
           const permissionsList = documents && documentSerializer(documents)
           return (
             <PageBlock variation="full">

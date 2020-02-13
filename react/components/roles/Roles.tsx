@@ -28,7 +28,7 @@ const Roles = () => {
       where: ""
     }
   })
-  const documents = !loading && !error ? path(["documents"], data) : null
+  const documents = !loading && !error ? path(["myDocuments"], data) : null
   const permissions : Permission[] = documents ? documentSerializer(documents) : []
   return (
     !loading && (
@@ -57,7 +57,7 @@ const Roles = () => {
             if (error) {
               return <div>Failed to load roles</div>
             }
-            const documents = path(["documents"], data)
+            const documents = path(["myDocuments"], data)
             const rolesList = documents && documentSerializer(documents)
             return (
               <PageBlock variation="full">
