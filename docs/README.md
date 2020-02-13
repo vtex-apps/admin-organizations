@@ -1,28 +1,145 @@
-# [ WORK IN PROGRESS ] Admin Example
+# Admin Authorization
 
-An example admin app that adds a menu button to the admin sidebar.
+This is a admin application for managing `Roles` and `Permissions` in the system.
 
-# PREVIEW NOTICE :construction:
+## Usage
 
-We're working on the **admin builder**, which will allow you to define two files: `admin/routes.json` file with everything you need to create an admin interface (routes paths and components), and `admin/navigation.json` which alows your admin app to insert itself in the sidebar navigation. This is a temporary example!
+Install latest version of this app, then you can see the features in admin view. 
 
-### How to develop admins
+```js
+vtex install vtex.admin-authorization
+```
 
-1. Admins always declare routes in `/admin/app/<route>`
+> **_NOTE:_**  This application is not yet published under `vtex` vendor name, therefore you have to publish this app with your own vendor name or you have to `link` this app to your development workspace directly.
+>
+> ### Link application to development workspace
+> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
+> - link this app to your workspace (`vtex link --verbose`)
+>
+> ### publish with your vendor name
+> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
+> - go to `manufest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "biscoindqa"`)
+> - update the `version` in `manufest.json` if you have published the same version earlier
+> - install that published version to your workspace (`vtex install biscoindqa.my-organization`)
 
-2. Declare the `admin` builder in your manifest
+### Prerequisites
 
-3. When installed, the user navigates to `/admin/<route>`, but your app runs in an iframe that points to `/admin/app/<route>`.
+In order to run this application following master data schemas should be created. 
+Use `MASTER DATA API - V2` in vtex api documentation to create those schemas (https://developers.vtex.com/reference#master-data-api-v2-overview)
 
-4. You can develop directly in the `/admin/app` route for convenience, but don't forget to test it inside the iframe. :)
+These schemas are shared among several applications `vtex-admin-authorization`, `vtex-permission-challenge` and `vtex-my-organization`, therefore if you have already created these schemas you can ignore this step
 
 
-### Quickstart
+<details><summary>Permissions</summary>
 
-1. Clone this repo
+``` 
 
-2. `yarn --cwd react/` for code completion
+Data Entity Name: BusinessPermission
+Schema Name: business-permission-schema-v1
 
-3. `vtex link`
+{
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string"
+		}
+	},
+	"v-default-fields": [
+		"name",
+		"label",
+		"id"
+	],
+	"required": [
+		"name"
+	],
+	"v-indexed": [
+		"name"
+	],
+	"v-security": {
+		"allowGetAll": true,
+		"publicRead": [
+			"name",
+			"label",
+			"id"
+		],
+		"publicWrite": [
+			"name",
+			"label"
+		],
+		"publicFilter": [
+			"name",
+			"id"
+		]
+	}
+}
 
-4. Navigate to `workspace--account.myvtex.com/admin/app/example`
+```
+</details>
+
+<details><summary>Roles</summary>
+
+``` 
+
+Data Entity Name: BusinessRole
+Schema Name: business-role-schema-v1
+
+{
+	"properties": {
+		"name": {
+			"type": "string"
+		},
+		"label": {
+			"type": "string"
+		},
+		"permissions": {
+			"type": "array",
+			"items": {
+				"$ref": "#/definitions/permission"
+			}
+		}
+	},
+	"definitions": {
+		"permission": {
+			"type": "string"
+		}
+	},
+	"v-default-fields": [
+		"name",
+		"label",
+		"id",
+		"permissions"
+	],
+	"required": [
+		"name"
+	],
+	"v-indexed": [
+		"name"
+	],
+	"v-security": {
+		"allowGetAll": true,
+		"publicRead": [
+			"name",
+			"label",
+			"permissions",
+			"id"
+		],
+		"publicWrite": [
+			"name",
+			"label",
+			"permissions"
+		],
+		"publicFilter": [
+			"name",
+			"id"
+		]
+	}
+}
+
+```
+</details>
+
+### Add Required roles
+You will need `manager` role to be created for fully functioning other related applications
+Use `label` as `Manager` and `name` as `manager` to create `Manager` role
