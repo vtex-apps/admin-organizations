@@ -5,6 +5,7 @@ import { Role, Permission } from "../../utils/dataTypes"
 import RoleModal from './RoleModal'
 import RoleDelete from './RoleDelete'
 import '../../styles.global.css'
+
 class RolesList extends Component {
   constructor(props: any) {
     super(props)
@@ -66,7 +67,7 @@ class RolesList extends Component {
           cellRenderer: ({ cellData }: any) => {
             return cellData ? (
               <div className={`ws-normal ${fontSize}`}>
-                {(JSON.parse(cellData) as any[]).map(x => (
+                { cellData === null || cellData ==="" || cellData ==="null"? <div /> :(JSON.parse(cellData) as any[]).map(x => (
                   <div>
                     <span className={`ws-normal ${fontSize}`}>
                       {this.getPermission(x)}
