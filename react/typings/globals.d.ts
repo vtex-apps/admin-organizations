@@ -43,4 +43,10 @@ declare global {
     label: string;
     id?: string;
   }
+
+  interface TostMessage {
+    showToast: boolean
+    message: string
+    type: string
+  }
 }

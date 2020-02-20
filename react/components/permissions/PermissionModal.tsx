@@ -5,10 +5,12 @@ import CREATE_DOCUMENT from '../../graphql/mutations/createDocument.graphql'
 import UPDATE_DOCUMENT from '../../graphql/mutations/updateDocument.graphql'
 import { updateCacheAddPermission, updateCacheUpdatePermission } from '../../utils/cacheUtils'
 import { PERMISSIONS_ACRONYM, PERMISSIONS_SCHEMA } from '../../utils/consts'
+import { getErrorMessage } from '../../utils/graphqlErrorHandler'
+
 interface Props {
   isModalOpen: boolean
   permission: Permission
-  closeModal: () => void
+  closeModal: (message: string, type: string) => void
 }
 
 const PermissionModal = (props: Props) => {
@@ -37,7 +39,7 @@ const PermissionModal = (props: Props) => {
   })
 
   const handleCloseModal = () => {
-    props.closeModal()
+    props.closeModal('', 'close')
   }
 
   useEffect(() => {
@@ -51,7 +53,7 @@ const PermissionModal = (props: Props) => {
     setLabel(props.permission && props.permission.label ? props.permission.label : '')
   }, [props.permission])
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const permissionFields = [
       { key: 'name', value: name },
       { key: 'label', value: label },
@@ -61,15 +63,18 @@ const PermissionModal = (props: Props) => {
     }
     const save = isEdit? editPermission: addPermission
     
-    await save({
+    save({
       variables: {
         acronym: PERMISSIONS_ACRONYM,
         document: { fields: permissionFields },
         schema: PERMISSIONS_SCHEMA,
       },
+    }).catch((e) => {
+      const message = getErrorMessage(e)
+      props.closeModal(message, 'error')
+    }).then(() => {
+      props.closeModal(`successfully ${ isEdit? 'updated': 'created' } permission "${label}"`, 'success')
     })
-
-    props.closeModal()
   }
 
   return (

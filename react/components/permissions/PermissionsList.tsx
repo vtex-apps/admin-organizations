@@ -13,6 +13,8 @@ import { documentSerializer } from '../../utils/documentSerializer'
 import PermissionDelete from './PermissionDelete'
 import PermissionModal from './PermissionModal'
 
+import Toast from '../../Toast'
+
 const PermissionsList = () => {
   
   const { data, loading, error } = useQuery(DOCUMENTS, {
@@ -32,6 +34,8 @@ const PermissionsList = () => {
   const [sharedPermission, setSharedPermission] = useState({} as Permission)
   const [openPermissionModal, setOpenPermissionModal] = useState(false)
   const [openPermissionDelete, setOpenPermissionDelete] = useState(false)
+
+  const [tostMessage, setTostMessage] = useState({showToast: false, message: '', type: '' } as TostMessage)
 
   const getSchema = () => {
     let fontSize = 'f5'
@@ -86,14 +90,26 @@ const PermissionsList = () => {
     setOpenPermissionDelete(true)
   }
 
-  const closeCreateEditModal = () => {
+  const closeCreateEditModal = (message: string, messageType: string) => {
     setSharedPermission({} as Permission)
     setOpenPermissionModal(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
+    }
   }
 
-  const closeDeleteModal = () => {
+  const closeDeleteModal = (message: string, messageType: string) => {
     setSharedPermission({} as Permission)
     setOpenPermissionDelete(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
+    }
+  }
+
+  const handleCloseToast = () => {
+    setTostMessage({showToast: false, message: '', type: '' } as TostMessage)
   }
 
   const lineActions = [
@@ -152,6 +168,14 @@ const PermissionsList = () => {
         isModalOpen={openPermissionDelete}
         permission={sharedPermission}
       />
+      {tostMessage.showToast && (
+        <Toast
+          type={tostMessage.type}
+          showToast={tostMessage.showToast}
+          message={tostMessage.message}
+          onClose={handleCloseToast}
+        />
+      )}
     </div>
   )
 }

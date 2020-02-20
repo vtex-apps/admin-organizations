@@ -4,11 +4,12 @@ import { ModalDialog } from 'vtex.styleguide'
 import DELETE_DOCUMENT from '../../graphql/mutations/deleteDocument.graphql'
 import { updateCacheDeleteRole } from '../../utils/cacheUtils'
 import { ROLES_ACRONYM } from '../../utils/consts'
+import { getErrorMessage } from '../../utils/graphqlErrorHandler'
 
 interface Props {
   isModalOpen: boolean
   role: Role
-  closeModal: () => void
+  closeModal: (message: string, type: string) => void
 }
 
 const RoleDelete = (props: Props) => {
@@ -26,18 +27,22 @@ const RoleDelete = (props: Props) => {
     setId(props.role && props.role.id ? props.role.id : '')
   }, [props.role])
 
-  const handleConfirmation = async () => {
-    await deleteRole({
+  const handleConfirmation = () => {
+    deleteRole({
       variables: {
         acronym: ROLES_ACRONYM,
         documentId: id,
       },
+    }).catch((e) => {
+      const message = getErrorMessage(e)
+      props.closeModal(message, 'error')
+    }).then(() => {
+      props.closeModal(`successfully deleted role "${props.role.label}"`, 'success')
     })
-    props.closeModal()
   }
 
   const handleCancelation = () => {
-    props.closeModal()
+    props.closeModal('', 'close')
   }
 
   return (

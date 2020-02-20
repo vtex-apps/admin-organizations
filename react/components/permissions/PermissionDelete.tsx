@@ -4,11 +4,12 @@ import { Button, Input, ModalDialog } from 'vtex.styleguide'
 import DELETE_DOCUMENT from '../../graphql/mutations/deleteDocument.graphql'
 import { updateCacheDeletePermission } from '../../utils/cacheUtils'
 import { PERMISSIONS_ACRONYM } from '../../utils/consts'
+import { getErrorMessage } from '../../utils/graphqlErrorHandler'
 
 interface Props {
   isModalOpen: boolean
   permission: Permission
-  closeModal: () => void
+  closeModal: (message: string, type: string) => void
 }
 
 const PermissionDelete = (props: Props) => {
@@ -26,18 +27,22 @@ const PermissionDelete = (props: Props) => {
     setId(props.permission && props.permission.id ? props.permission.id : '')
   }, [props.permission])
 
-  const handleConfirmation = async () => {
-    await deletePermission({
+  const handleConfirmation = () => {
+    deletePermission({
       variables: {
         acronym: PERMISSIONS_ACRONYM,
         documentId: id,
       },
+    }).catch((e) => {
+      const message = getErrorMessage(e)
+      props.closeModal(message, 'error')
+    }).then(() => {
+      props.closeModal(`successfully deleted permission "${props.permission.label}"`, 'success')
     })
-    props.closeModal()
   }
 
   const handleCancelation = () => {
-    props.closeModal()
+    props.closeModal('', 'close')
   }
 
   return (

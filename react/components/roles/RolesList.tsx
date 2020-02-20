@@ -1,9 +1,11 @@
 import { find, pathOr, propEq } from 'ramda'
 import React, { useState } from 'react'
+import { useQuery } from 'react-apollo'
 import { Spinner, Table } from 'vtex.styleguide'
 import DOCUMENTS from '../../graphql/queries/documents.graphql'
 import '../../styles.global.css'
 import '../../styles.global.css'
+import Toast from '../../Toast'
 import {
   PERMISSIONS_ACRONYM,
   PERMISSIONS_FIELDS,
@@ -15,8 +17,6 @@ import {
 import { documentSerializer } from '../../utils/documentSerializer'
 import RoleDelete from './RoleDelete'
 import RoleModal from './RoleModal'
-
-import { useQuery } from 'react-apollo'
 
 const RolesList = () => {
   const {
@@ -60,6 +60,8 @@ const RolesList = () => {
   const [openRoleModal, setOpenRoleModal] = useState(false)
   const [openRoleDelete, setOpenRoleDelete] = useState(false)
 
+  const [tostMessage, setTostMessage] = useState({showToast: false, message: '', type: '' } as TostMessage)
+  
   const createNewRole = () => {
     setSharedRole({} as Role)
     setOpenRoleModal(true)
@@ -75,14 +77,27 @@ const RolesList = () => {
     setOpenRoleDelete(true)
   }
 
-  const closeCreateEditModal = () => {
+  const closeCreateEditModal = (message: string, messageType: string) => {
+
     setSharedRole({} as Role)
     setOpenRoleModal(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
+    }
   }
 
-  const closeDeleteModal = () => {
+  const closeDeleteModal = (message: string, messageType: string) => {
     setSharedRole({} as Role)
     setOpenRoleDelete(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
+    }
+  }
+
+  const handleCloseToast = () => {
+    setTostMessage({showToast: false, message: '', type: '' } as TostMessage)
   }
 
   const lineActions = [
@@ -214,6 +229,14 @@ const RolesList = () => {
           role: sharedRole,
         }}
       />
+      {tostMessage.showToast && (
+          <Toast
+            type={tostMessage.type}
+            showToast={tostMessage.showToast}
+            message={tostMessage.message}
+            onClose={handleCloseToast}
+          />
+        )}
     </div>
   )
 }

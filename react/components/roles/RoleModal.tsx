@@ -7,12 +7,13 @@ import UPDATE_DOCUMENT from '../../graphql/mutations/updateDocument.graphql'
 import '../../styles.global.css'
 import { updateCacheAddRole, updateCacheEditRole } from '../../utils/cacheUtils'
 import { ROLES_ACRONYM, ROLES_SCHEMA } from '../../utils/consts'
+import { getErrorMessage } from '../../utils/graphqlErrorHandler'
 
 interface Props {
   isModalOpen: boolean
   role: Role
   allPermissions: Permission[]
-  closeModal: () => void
+  closeModal: (message: string, type: string) => void
 }
 
 const RoleModal = (props: Props) => {
@@ -44,7 +45,7 @@ const RoleModal = (props: Props) => {
   })
 
   const handleCloseModal = () => {
-    props.closeModal()
+    props.closeModal('', 'close')
   }
 
   useEffect(() => {
@@ -59,7 +60,7 @@ const RoleModal = (props: Props) => {
   }, [props.role])
 
   const getSelectedPermissions = (ids: any) => {
-    if(ids === null || ids === '' || ids === 'null' || !ids || ids.length == 0) { return [] as Permission[] }
+    if(ids === null || ids === '' || ids === 'null' || !ids || ids.length === 0) { return [] as Permission[] }
     const { allPermissions } = props
     return (JSON.parse(ids) as string[]).map(x => find(propEq('id', x))(allPermissions)) as Permission[]
   }
@@ -75,7 +76,7 @@ const RoleModal = (props: Props) => {
     }
   }
 
-  const handleSave = async () => {
+  const handleSave = () => {
     const roleFields = [
       { key: 'name', value: name },
       { key: 'label', value: label },
@@ -92,15 +93,18 @@ const RoleModal = (props: Props) => {
 
     const save = isEdit ? editRole : addRole
 
-    await save({
+    save({
       variables: {
         acronym: ROLES_ACRONYM,
         document: { fields: roleFields },
         schema: ROLES_SCHEMA,
       },
+    }).catch((e) => {
+      const message = getErrorMessage(e)
+      props.closeModal(message, 'error')
+    }).then(() => {
+      props.closeModal(`successfully ${ isEdit? 'updated': 'created' } role "${label}"`, 'success')
     })
-
-    props.closeModal()
   }
 
   const tableScheme = {
