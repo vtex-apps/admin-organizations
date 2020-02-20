@@ -1,31 +1,37 @@
-import React, { useState, useEffect } from "react"
-import { ModalDialog } from "vtex.styleguide"
-import { Role } from "../../utils/dataTypes"
-import { useMutation } from "react-apollo"
-import DELETE_DOCUMENT from "../../graphql/mutations/deleteDocument.graphql"
-import { ROLES_ACRONYM } from "../../utils/consts"
+import React, { useEffect, useState } from 'react'
+import { useMutation } from 'react-apollo'
+import { ModalDialog } from 'vtex.styleguide'
+import DELETE_DOCUMENT from '../../graphql/mutations/deleteDocument.graphql'
+import { updateCacheDeleteRole } from '../../utils/cacheUtils'
+import { ROLES_ACRONYM } from '../../utils/consts'
 
 interface Props {
   isModalOpen: boolean
   role: Role
-  closeModal: Function
+  closeModal: () => void
 }
 
 const RoleDelete = (props: Props) => {
-  const [id, setId] = useState("")
+  const [id, setId] = useState('')
 
-  const [deleteRole] = useMutation(DELETE_DOCUMENT)
+  const [deleteRole] = useMutation(DELETE_DOCUMENT, {
+    update: (cache: any, { data }: any) =>
+    updateCacheDeleteRole(
+        cache,
+        data
+      ),
+  })
 
   useEffect(() => {
-    setId(props.role && props.role.id ? props.role.id : "")
+    setId(props.role && props.role.id ? props.role.id : '')
   }, [props.role])
 
   const handleConfirmation = async () => {
     await deleteRole({
       variables: {
         acronym: ROLES_ACRONYM,
-        documentId: id
-      }
+        documentId: id,
+      },
     })
     props.closeModal()
   }
@@ -38,13 +44,13 @@ const RoleDelete = (props: Props) => {
     <ModalDialog
       centered
       confirmation={{
+        isDangerous: true,
+        label: 'Delete',
         onClick: handleConfirmation,
-        label: "Delete",
-        isDangerous: true
       }}
       cancelation={{
+        label: 'Cancel',
         onClick: handleCancelation,
-        label: "Cancel"
       }}
       isOpen={props.isModalOpen}
       onClose={handleCancelation}

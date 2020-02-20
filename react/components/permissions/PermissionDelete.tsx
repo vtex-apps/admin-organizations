@@ -1,31 +1,37 @@
-import React, { useState, useEffect } from "react"
-import { ModalDialog, Button, Input } from "vtex.styleguide"
-import { Permission } from "../../utils/dataTypes"
-import { useMutation } from "react-apollo"
-import DELETE_DOCUMENT from "../../graphql/mutations/deleteDocument.graphql"
-import { PERMISSIONS_ACRONYM } from "../../utils/consts"
+import React, { useEffect, useState } from 'react'
+import { useMutation } from 'react-apollo'
+import { Button, Input, ModalDialog } from 'vtex.styleguide'
+import DELETE_DOCUMENT from '../../graphql/mutations/deleteDocument.graphql'
+import { updateCacheDeletePermission } from '../../utils/cacheUtils'
+import { PERMISSIONS_ACRONYM } from '../../utils/consts'
 
 interface Props {
   isModalOpen: boolean
   permission: Permission
-  closeModal: Function
+  closeModal: () => void
 }
 
 const PermissionDelete = (props: Props) => {
-  const [id, setId] = useState("")
+  const [id, setId] = useState('')
 
-  const [deletePermission] = useMutation(DELETE_DOCUMENT)
+  const [deletePermission] = useMutation(DELETE_DOCUMENT, {
+    update: (cache: any, { data }: any) =>
+      updateCacheDeletePermission(
+        cache,
+        data
+      ),
+  })
 
   useEffect(() => {
-    setId(props.permission && props.permission.id ? props.permission.id : "")
+    setId(props.permission && props.permission.id ? props.permission.id : '')
   }, [props.permission])
 
   const handleConfirmation = async () => {
     await deletePermission({
       variables: {
         acronym: PERMISSIONS_ACRONYM,
-        documentId: id
-      }
+        documentId: id,
+      },
     })
     props.closeModal()
   }
@@ -38,13 +44,13 @@ const PermissionDelete = (props: Props) => {
     <ModalDialog
       centered
       confirmation={{
+        isDangerous: true,
+        label: 'Delete',
         onClick: handleConfirmation,
-        label: "Delete",
-        isDangerous: true
       }}
       cancelation={{
+        label: 'Cancel',
         onClick: handleCancelation,
-        label: "Cancel"
       }}
       isOpen={props.isModalOpen}
       onClose={handleCancelation}
