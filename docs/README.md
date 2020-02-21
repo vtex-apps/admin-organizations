@@ -94,10 +94,7 @@ Schema Name: business-role-schema-v1
 			"type": "string"
 		},
 		"permissions": {
-			"type": "array",
-			"items": {
-				"$ref": "#/definitions/permission"
-			}
+			"type": "string"
 		}
 	},
 	"definitions": {
