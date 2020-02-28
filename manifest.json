@@ -1,7 +1,7 @@
 {
   "name": "admin-authorization",
   "vendor": "vtex",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "title": "Admin app for handle authorizations",
   "description": "",
   "mustUpdateAt": "2022-08-28",
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vtex.styleguide": "9.x",
-    "vtex.store-graphql": "2.x"
+    "biscoindqa.document-graphql": "0.x"
   },
   "builders": {
     "react": "3.x",

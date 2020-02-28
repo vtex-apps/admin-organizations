@@ -1,26 +1,45 @@
-import React, { Component } from 'react'
-import { Table } from "vtex.styleguide"
-import PermissionModal from './PermissionModal'
-import { Permission } from '../../utils/dataTypes'
+import { pathOr } from 'ramda'
+import React, { useState } from 'react'
+import { useQuery } from 'react-apollo'
+import { Spinner, Table } from 'vtex.styleguide'
+import DOCUMENTS from '../../graphql/queries/documents.graphql'
+import '../../styles.global.css'
+import {
+  PERMISSIONS_ACRONYM,
+  PERMISSIONS_FIELDS,
+  PERMISSIONS_SCHEMA
+} from '../../utils/consts'
+import { documentSerializer } from '../../utils/documentSerializer'
 import PermissionDelete from './PermissionDelete'
+import PermissionModal from './PermissionModal'
 
-class PermissionsList extends Component {
-  constructor(props: any) {
-    super(props)
-    this.state = {
-      items: props.itemsList,
-      tableDensity: 'low',
-      searchValue: null,
-      selectedPermission: {},
-      openPermissionModal: false,
-      openPermissionDelete: false
-    }
-  }
+import Toast from '../../Toast'
+
+const PermissionsList = () => {
   
-  private getSchema() {
-    const { tableDensity }: any = this.state
+  const { data, loading, error } = useQuery(DOCUMENTS, {
+    variables: {
+      acronym: PERMISSIONS_ACRONYM,
+      fields: PERMISSIONS_FIELDS,
+      page: 1,
+      pageSize: 100,
+      schema: PERMISSIONS_SCHEMA,
+    },
+  })
+
+  const permissionsList = documentSerializer(pathOr([], ['myDocuments'], data))
+
+  const [tableDensity, setTableDensity] = useState('low')
+  const [searchValue, setSearchValue] = useState('')
+  const [sharedPermission, setSharedPermission] = useState({} as Permission)
+  const [openPermissionModal, setOpenPermissionModal] = useState(false)
+  const [openPermissionDelete, setOpenPermissionDelete] = useState(false)
+
+  const [tostMessage, setTostMessage] = useState({showToast: false, message: '', type: '' } as TostMessage)
+
+  const getSchema = () => {
     let fontSize = 'f5'
-    switch(tableDensity) {
+    switch (tableDensity) {
       case 'low': {
         fontSize = 'f5'
         break
@@ -40,105 +59,125 @@ class PermissionsList extends Component {
     }
     return {
       properties: {
-        name: {
-          title: 'Name',
-          cellRenderer: ({ cellData }: any) => {
-            return (
-              <span className={`ws-normal ${fontSize}`}>
-                {cellData}
-              </span>
-            )
-          }
-        },
         label: {
-          title: 'Label',
           cellRenderer: ({ cellData }: any) => {
-            return (
-              <span className={`ws-normal ${fontSize}`}>
-                {cellData}
-              </span>
-            )
-          }
-        }
-      }
+            return <span className={`ws-normal ${fontSize}`}>{cellData}</span>
+          },
+          title: 'Label',
+        },
+        name: {
+          cellRenderer: ({ cellData }: any) => {
+            return <span className={`ws-normal ${fontSize}`}>{cellData}</span>
+          },
+          title: 'Name',
+        },
+      },
     }
   }
 
-  public render() {
-    const { items, searchValue, tableDensity, selectedPermission, openPermissionModal, openPermissionDelete }: any = this.state
+  const createNewPermission = () => {
+    setSharedPermission({} as Permission)
+    setOpenPermissionModal(true)
+  }
 
-    const createNewPermission = () => {
-      this.setState({selectedPermission : {}}) 
-      this.setState({openPermissionModal: true})
+  const editPermission = (cellData: Permission) => {
+    setSharedPermission(cellData)
+    setOpenPermissionModal(true)
+  }
+
+  const deletePermission = (cellData: Permission) => {
+    setSharedPermission(cellData)
+    setOpenPermissionDelete(true)
+  }
+
+  const closeCreateEditModal = (message: string, messageType: string) => {
+    setSharedPermission({} as Permission)
+    setOpenPermissionModal(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
     }
+  }
 
-    const editPermission = (cellData: Permission) => {
-      this.setState({selectedPermission : cellData}) 
-      this.setState({openPermissionModal: true})
+  const closeDeleteModal = (message: string, messageType: string) => {
+    setSharedPermission({} as Permission)
+    setOpenPermissionDelete(false)
+
+    if(messageType === 'error' || messageType === 'success'){
+      setTostMessage({showToast: true, message, type: messageType } as TostMessage)
     }
+  }
 
-    const deletePermission = (cellData: Permission) => {
-      this.setState({selectedPermission : cellData}) 
-      this.setState({openPermissionDelete: true})
-    }
+  const handleCloseToast = () => {
+    setTostMessage({showToast: false, message: '', type: '' } as TostMessage)
+  }
 
-    const closeModal = () => {
-      this.setState({selectedPermission : {}}) 
-      this.setState({openPermissionModal: false})
-    }
+  const lineActions = [
+    {
+      label: () => `Edit`,
+      onClick: ({ rowData }: any) => editPermission(rowData),
+    },
+    {
+      isDangerous: true,
+      label: () => `Delete`,
+      onClick: ({ rowData }: any) => deletePermission(rowData),
+    },
+  ]
 
-    const closeDeleteModal = () => {
-      this.setState({selectedPermission : {}}) 
-      this.setState({openPermissionDelete: false})
-    }
-
-    const lineActions = [
-      {
-        label: () => `Edit`,
-        onClick: ({ rowData }: any) => editPermission(rowData),
-      },
-      {
-        label: () => `Delete`,
-        isDangerous: true,
-        onClick: ({ rowData }: any) => deletePermission(rowData),
-      },
-    ]
-
-    return (
-      <div>
-        <Table
-          fullWidth
-          updateTableKey={tableDensity}
-          items={items}
-          schema={this.getSchema()}
-          density="low"
-          lineActions={lineActions}
-          toolbar={{
-            density: {
-              buttonLabel: 'Line density',
-              lowOptionLabel: 'Low',
-              mediumOptionLabel: 'Medium',
-              highOptionLabel: 'High',
-              handleCallback: (tableDensity: string) => this.setState({ tableDensity })
-            },
-            inputSearch: {
-              value: searchValue,
-              placeholder: 'Search permission...',
-              onChange: (searchValue: string) => this.setState({ searchValue }),
-              onClear: () => this.setState({ searchValue: null }),
-              onSubmit: () => {},
-            },
-            newLine: {
-              label: 'New',
-              handleCallback: () => createNewPermission(),
-            }
-          }}
+  return loading ? (
+    <Spinner />
+  ) : error ? (
+    <div>Failed to load permissions</div>
+  ) : (
+    <div>
+      <Table
+        fullWidth
+        updateTableKey={tableDensity}
+        items={permissionsList}
+        schema={getSchema()}
+        density="low"
+        lineActions={lineActions}
+        toolbar={{
+          density: {
+            buttonLabel: 'Line density',
+            handleCallback: (density: string) => setTableDensity(density),
+            highOptionLabel: 'High',
+            lowOptionLabel: 'Low',
+            mediumOptionLabel: 'Medium',
+          },
+          inputSearch: {
+            onChange: (value: string) => setSearchValue(value),
+            onClear: () => setSearchValue(''),
+            onSubmit: () => {},
+            placeholder: 'Search permission...',
+            value: searchValue,
+          },
+          newLine: {
+            handleCallback: () => createNewPermission(),
+            label: 'New',
+          },
+        }}
+      />
+      <PermissionModal
+        closeModal={closeCreateEditModal}
+        isModalOpen={openPermissionModal}
+        permission={sharedPermission}
+      />
+      <PermissionDelete
+        closeModal={closeDeleteModal}
+        isModalOpen={openPermissionDelete}
+        permission={sharedPermission}
+      />
+      {tostMessage.showToast && (
+        <Toast
+          type={tostMessage.type}
+          showToast={tostMessage.showToast}
+          message={tostMessage.message}
+          onClose={handleCloseToast}
         />
-        <PermissionModal {...{permission: selectedPermission, isModalOpen: openPermissionModal, closeModal: closeModal }}/>
-        <PermissionDelete {...{permission: selectedPermission, isModalOpen: openPermissionDelete, closeModal: closeDeleteModal }}/>
-      </div>
-    )
-  }
+      )}
+    </div>
+  )
 }
 
 export default PermissionsList

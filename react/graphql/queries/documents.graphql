@@ -1,5 +1,5 @@
 query mediaDocumentsQuery ($acronym: String, $fields: [String], $page: Int, $pageSize: Int, $where: String, $schema: String){
-  documents(acronym: $acronym, fields: $fields, page: $page, pageSize:$pageSize, where:$where, schema: $schema) {
+  myDocuments(acronym: $acronym, fields: $fields, page: $page, pageSize:$pageSize, where:$where, schema: $schema) {
     id
     fields 
     {
