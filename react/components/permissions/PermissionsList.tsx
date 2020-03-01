@@ -145,13 +145,6 @@ const PermissionsList = () => {
             lowOptionLabel: 'Low',
             mediumOptionLabel: 'Medium',
           },
-          inputSearch: {
-            onChange: (value: string) => setSearchValue(value),
-            onClear: () => setSearchValue(''),
-            onSubmit: () => {},
-            placeholder: 'Search permission...',
-            value: searchValue,
-          },
           newLine: {
             handleCallback: () => createNewPermission(),
             label: 'New',

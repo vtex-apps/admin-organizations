@@ -201,13 +201,6 @@ const RolesList = () => {
             lowOptionLabel: 'Low',
             mediumOptionLabel: 'Medium',
           },
-          inputSearch: {
-            onChange: (value: string) => setSearchValue(value),
-            onClear: () => setSearchValue(''),
-            onSubmit: () => {},
-            placeholder: 'Search role...',
-            value: searchValue,
-          },
           newLine: {
             handleCallback: () => createNewRole(),
             label: 'New',

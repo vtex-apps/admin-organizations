@@ -168,7 +168,7 @@ const RoleModal = (props: Props) => {
     >
       <div className="mb5">
         <Input
-          placeholder="e.g. view_order"
+          placeholder="e.g. sales_manager"
           dataAttributes={{ 'hj-white-list': true, test: 'string' }}
           label="Name"
           value={name}
@@ -177,7 +177,7 @@ const RoleModal = (props: Props) => {
       </div>
       <div className="mb5">
         <Input
-          placeholder="e.g. View Order"
+          placeholder="e.g. Sales Manager"
           dataAttributes={{ 'hj-white-list': true, test: 'string' }}
           label="Label"
           value={label}
