@@ -1,50 +1,61 @@
-import React, { useState, useEffect } from "react"
-import { ModalDialog, Button, Input } from "vtex.styleguide"
-import { Permission } from "../../utils/dataTypes"
-import { useMutation } from "react-apollo"
-import DELETE_DOCUMENT from "../../graphql/mutations/deleteDocument.graphql"
-import { PERMISSIONS_ACRONYM } from "../../utils/consts"
+import React, { useEffect, useState } from 'react'
+import { useMutation } from 'react-apollo'
+import { Button, Input, ModalDialog } from 'vtex.styleguide'
+import DELETE_DOCUMENT from '../../graphql/mutations/deleteDocument.graphql'
+import { updateCacheDeletePermission } from '../../utils/cacheUtils'
+import { PERMISSIONS_ACRONYM } from '../../utils/consts'
+import { getErrorMessage } from '../../utils/graphqlErrorHandler'
 
 interface Props {
   isModalOpen: boolean
   permission: Permission
-  closeModal: Function
+  closeModal: (message: string, type: string) => void
 }
 
 const PermissionDelete = (props: Props) => {
-  const [id, setId] = useState("")
+  const [id, setId] = useState('')
 
-  const [deletePermission] = useMutation(DELETE_DOCUMENT)
+  const [deletePermission] = useMutation(DELETE_DOCUMENT, {
+    update: (cache: any, { data }: any) =>
+      updateCacheDeletePermission(
+        cache,
+        data
+      ),
+  })
 
   useEffect(() => {
-    setId(props.permission && props.permission.id ? props.permission.id : "")
+    setId(props.permission && props.permission.id ? props.permission.id : '')
   }, [props.permission])
 
-  const handleConfirmation = async () => {
-    await deletePermission({
+  const handleConfirmation = () => {
+    deletePermission({
       variables: {
         acronym: PERMISSIONS_ACRONYM,
-        documentId: id
-      }
+        documentId: id,
+      },
+    }).catch((e) => {
+      const message = getErrorMessage(e)
+      props.closeModal(message, 'error')
+    }).then(() => {
+      props.closeModal(`successfully deleted permission "${props.permission.label}"`, 'success')
     })
-    props.closeModal()
   }
 
   const handleCancelation = () => {
-    props.closeModal()
+    props.closeModal('', 'close')
   }
 
   return (
     <ModalDialog
       centered
       confirmation={{
+        isDangerous: true,
+        label: 'Delete',
         onClick: handleConfirmation,
-        label: "Delete",
-        isDangerous: true
       }}
       cancelation={{
+        label: 'Cancel',
         onClick: handleCancelation,
-        label: "Cancel"
       }}
       isOpen={props.isModalOpen}
       onClose={handleCancelation}
