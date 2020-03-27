@@ -1,8 +1,8 @@
 {
-  "name": "admin-authorization",
+  "name": "admin-organizations",
   "vendor": "vtex",
   "version": "1.0.0",
-  "title": "Admin app for handle authorizations",
+  "title": "Admin app for managing organizations",
   "description": "",
   "mustUpdateAt": "2022-08-28",
   "scripts": {
@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vtex.styleguide": "9.x",
-    "biscoindqa.document-graphql": "0.x"
+    "vtex.organizations-graphql": "0.x"
   },
   "builders": {
     "react": "3.x",

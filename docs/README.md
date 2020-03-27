@@ -1,6 +1,6 @@
-# Admin Authorization
+# Admin Organizations
 
-This is a admin application for managing `Roles` and `Permissions` in the system.
+This is a admin application for managing `Roles` and `Permissions` for organizations on a B2B Store.
 
 ## Usage
 
@@ -13,14 +13,14 @@ vtex install vtex.admin-authorization
 > **_NOTE:_**  This application is not yet published under `vtex` vendor name, therefore you have to publish this app with your own vendor name or you have to `link` this app to your development workspace directly.
 >
 > ### Link application to development workspace
-> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
+> - clone the application to your working environment and checkout to the correct branch 
 > - link this app to your workspace (`vtex link --verbose`)
 >
 > ### publish with your vendor name
-> - clone the application to your working environment and checkout to the correct branch (i.e: `dev-master`)
-> - go to `manufest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "biscoindqa"`)
+> - clone the application to your working environment and checkout to the correct branch
+> - go to `manifest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "vtexufcg"`)
 > - update the `version` in `manufest.json` if you have published the same version earlier
-> - install that published version to your workspace (`vtex install biscoindqa.my-organization`)
+> - install that published version to your workspace (`vtex install {{vendor}}.admin-organizations`)
 
 ### Prerequisites
 
