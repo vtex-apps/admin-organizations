@@ -10,7 +10,7 @@
     "@types/react-intl": "^2.3.17",
     "@types/ramda": "^0.26.21",
     "prop-types": "^15.7.2",
-    "typescript": "3.7.3",
+    "typescript": "3.8.3",
     "prettier": "^1.16.4",
     "tslint": "^5.16.0",
     "tslint-config-vtex": "^2.1.0"
