@@ -1,7 +1,7 @@
 {
   "name": "admin-organizations",
   "vendor": "vtex",
-  "version": "1.0.0-beta",
+  "version": "1.0.0",
   "title": "Admin app for managing organizations",
   "description": "",
   "mustUpdateAt": "2022-08-28",
