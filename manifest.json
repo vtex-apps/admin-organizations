@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "vtex.styleguide": "9.x",
-    "vtex.organizations-graphql": "0.x"
+    "vtex.organizations-graphql": "1.x"
   },
   "builders": {
     "react": "3.x",
