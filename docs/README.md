@@ -7,20 +7,12 @@ This is a admin application for managing `Roles` and `Permissions` for organizat
 Install latest version of this app, then you can see the features in admin view. 
 
 ```js
-vtex install vtex.admin-authorization
+vtex install vtex.admin-authorization@1.x
 ```
-
-> **_NOTE:_**  This application is not yet published under `vtex` vendor name, therefore you have to publish this app with your own vendor name or you have to `link` this app to your development workspace directly.
 >
 > ### Link application to development workspace
 > - clone the application to your working environment and checkout to the correct branch 
 > - link this app to your workspace (`vtex link --verbose`)
->
-> ### publish with your vendor name
-> - clone the application to your working environment and checkout to the correct branch
-> - go to `manifest.json` in your project's root directory and change `vendor` to your current vendor name (i.e: `"vendor": "vtexufcg"`)
-> - update the `version` in `manufest.json` if you have published the same version earlier
-> - install that published version to your workspace (`vtex install {{vendor}}.admin-organizations`)
 
 ### Prerequisites
 
