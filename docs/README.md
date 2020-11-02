@@ -7,20 +7,15 @@ This is a admin application for managing `Roles` and `Permissions` for organizat
 Install latest version of this app, then you can see the features in admin view. 
 
 ```js
-vtex install vtex.admin-authorization@1.x
+vtex install vtex.admin-organizations@1.x
 ```
->
-> ### Link application to development workspace
-> - clone the application to your working environment and checkout to the correct branch 
-> - link this app to your workspace (`vtex link --verbose`)
 
 ### Prerequisites
 
 In order to run this application following master data schemas should be created. 
 Use `MASTER DATA API - V2` in vtex api documentation to create those schemas (https://developers.vtex.com/reference#master-data-api-v2-overview)
 
-These schemas are shared among several applications `vtex-admin-authorization`, `vtex-permission-challenge` and `vtex-my-organization`, therefore if you have already created these schemas you can ignore this step
-
+These schemas are shared among several applications `admin-organizations`, `organizations-challenge` and `organizations`, therefore if you have already created these schemas you can ignore this step
 
 <details><summary>Permissions</summary>
 
