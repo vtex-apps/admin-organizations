@@ -1,0 +1,18 @@
+{
+  "admin-authorization.navigation.label-group": "Autorizări",
+  "admin-authorization.navigation.label-details": "Toate permisiunile",
+  "admin-authorization.navigation.label-table": "Exemplu tabel",
+  "admin-authorization.navigation.search.kws": "test, simulare, fals",
+  "admin-authorization.navigation.details.search.kws": "detalii, simulare, test, bună",
+  "admin-authorization.navigation.table.search.kws": "tabel, simulare, test, pa",
+  "admin-authorization.hello-world": "Exemplu Admin",
+  "admin-authorization.navigation.label-permissions": "Toate permisiunile",
+  "admin-authorization.navigation.permissions.search.kws": "permisiuni, VTEX",
+  "admin-authorization.navigation.label-roles": "Toate rolurile",
+  "admin-authorization.navigation.roles.search.kws": "roluri, VTEX",
+  "admin-authorization.navigation.label-user-roles": "Roluri utilizator",
+  "admin-authorization.navigation.user-roles.search.kws": "rol utilizator, VTEX",
+  "admin-authorization.permissions.title": "Permisiuni",
+  "admin-authorization.roles.title": "Roluri",
+  "admin-authorization.user-roles.title": "Roluri utilizator"
+}
